@@ -13,18 +13,55 @@
 </title>
 
 <meta name="description" content="###前言看到最近web的滑动拼图验证码挺火的，移动设备目前还没有的样子，就像自己试着做一个出来，结果磕磕绊绊的花了三天时间。
-###效果">
+###构思
+
+随机生成一个CGPoint点
+以这个点为原点剪切出一个凹凸图形
+在原位置涂上阴影效果
+手指可以拖动抠图验证
+验证失败重新生成新的抠图
+验证成功进入下一步
+
+###代码思路
+
+用CoreGraphic在背景的UIImageView上扣出一块拼图给到新的UIIm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于画线画图的那点小事">
 <meta property="og:url" content="http://yoursite.com/2017/01/19/test/index.html">
 <meta property="og:site_name" content="浩的维度空间">
 <meta property="og:description" content="###前言看到最近web的滑动拼图验证码挺火的，移动设备目前还没有的样子，就像自己试着做一个出来，结果磕磕绊绊的花了三天时间。
-###效果">
-<meta property="og:updated_time" content="2017-01-20T01:57:03.000Z">
+###构思
+
+随机生成一个CGPoint点
+以这个点为原点剪切出一个凹凸图形
+在原位置涂上阴影效果
+手指可以拖动抠图验证
+验证失败重新生成新的抠图
+验证成功进入下一步
+
+###代码思路
+
+用CoreGraphic在背景的UIImageView上扣出一块拼图给到新的UIIm">
+<meta property="og:image" content="https://raw.githubusercontent.com/GaoRuihao/MarkdownPhotos/master/WX20170122-113208.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/GaoRuihao/MarkdownPhotos/master/WX20170122-115332.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/GaoRuihao/MarkdownPhotos/master/WX20170122-115636.png">
+<meta property="og:updated_time" content="2017-01-22T04:00:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于画线画图的那点小事">
 <meta name="twitter:description" content="###前言看到最近web的滑动拼图验证码挺火的，移动设备目前还没有的样子，就像自己试着做一个出来，结果磕磕绊绊的花了三天时间。
-###效果">
+###构思
+
+随机生成一个CGPoint点
+以这个点为原点剪切出一个凹凸图形
+在原位置涂上阴影效果
+手指可以拖动抠图验证
+验证失败重新生成新的抠图
+验证成功进入下一步
+
+###代码思路
+
+用CoreGraphic在背景的UIImageView上扣出一块拼图给到新的UIIm">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/GaoRuihao/MarkdownPhotos/master/WX20170122-113208.png">
 <meta name="twitter:creator" content="@http://www.weibo.com/207002347/">
 
 
@@ -175,7 +212,32 @@
   </div>
   <div class="article-entry">
     <p>###前言<br>看到最近web的滑动拼图验证码挺火的，移动设备目前还没有的样子，就像自己试着做一个出来，结果磕磕绊绊的花了三天时间。</p>
-<p>###效果</p>
+<p>###构思</p>
+<ul>
+<li>随机生成一个CGPoint点</li>
+<li>以这个点为原点剪切出一个凹凸图形</li>
+<li>在原位置涂上阴影效果</li>
+<li>手指可以拖动抠图验证</li>
+<li>验证失败重新生成新的抠图</li>
+<li>验证成功进入下一步</li>
+</ul>
+<p>###代码思路</p>
+<ul>
+<li>用CoreGraphic在背景的UIImageView上扣出一块拼图给到新的UIImage</li>
+<li>在背景的UIImageView上画出一块阴影表示对照</li>
+</ul>
+<p>##开始吧</p>
+<p>生成随机数的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">func randomFrame() &#123;</div><div class="line">        let originX = Int(arc4random()) % Int(graphImageView.bounds.size.width - 120) + 120</div><div class="line">        let originY = Int(arc4random()) % Int(graphImageView.bounds.size.height - 100)</div><div class="line">        cutFrame = CGRect(x: originX, y: originY, width: 100, height: 80)</div><div class="line">        graphImageView.frame = CGRect(x: 0, y: 0, width: 375, height: 240)</div><div class="line"> 		&#125;</div></pre></td></tr></table></figure>
+<p>剪切出批图块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">func cropImageWithPath(rect: CGRect) -&gt; UIImage? &#123;</div><div class="line">        UIGraphicsBeginImageContext(rect.size)</div><div class="line">        let context = UIGraphicsGetCurrentContext()</div><div class="line">        context?.clear(rect)</div><div class="line">        </div><div class="line">        let x = rect.origin.x + 10</div><div class="line">        let y = rect.origin.y + 10</div><div class="line">        </div><div class="line">        let path = CGMutablePath()</div><div class="line">        let transform = CGAffineTransform(translationX:-rect.origin.x, y:-rect.origin.y)</div><div class="line">        path.move(to: CGPoint(x: x, y: y), transform: transform)</div><div class="line">        path.addLine(to: CGPoint(x: x, y: y + 20), transform: transform)</div><div class="line">        path.addArc(center: CGPoint(x: x, y: y + 30), radius: 10, startAngle: CGFloat(M_PI_2), endAngle: CGFloat(-M_PI_2), clockwise: false, transform: transform);</div><div class="line">        path.addLine(to: CGPoint(x: x, y: y + 60), transform: transform)</div><div class="line">        </div><div class="line">        path.addLine(to: CGPoint(x: x + 30, y: y + 60), transform: transform)</div><div class="line">        path.addArc(center: CGPoint(x: x + 40, y: y + 60), radius: 10, startAngle: CGFloat(M_PI), endAngle: CGFloat(0), clockwise: true, transform: transform);</div><div class="line">        path.addLine(to: CGPoint(x: x + 80, y: y + 60), transform: transform)</div><div class="line">        </div><div class="line">        path.addLine(to: CGPoint(x: x + 80, y: y + 40), transform: transform)</div><div class="line">        path.addArc(center: CGPoint(x: x + 80, y: y + 30), radius: 10, startAngle: CGFloat(-M_PI_2), endAngle: CGFloat(M_PI_2), clockwise: false, transform: transform);</div><div class="line">        path.addLine(to: CGPoint(x: x + 80, y: y), transform: transform)</div><div class="line">        </div><div class="line">        path.addLine(to: CGPoint(x: x + 50, y: y), transform: transform)</div><div class="line">        path.addArc(center: CGPoint(x: x + 40, y: y), radius: 10, startAngle: CGFloat(0), endAngle: CGFloat(M_PI), clockwise: false, transform: transform);</div><div class="line">        path.addLine(to: CGPoint(x: x, y: y), transform: transform)</div><div class="line">        </div><div class="line">        context?.beginPath()</div><div class="line">        context?.addPath(path)</div><div class="line">        context?.clip()</div><div class="line">        </div><div class="line">        self.draw(in: CGRect(x: -x, y: -y, width: self.size.width * self.scale, height: self.size.height * self.scale))</div><div class="line">        let image = UIGraphicsGetImageFromCurrentImageContext()</div><div class="line">        UIGraphicsEndImageContext()</div><div class="line">        </div><div class="line">        if let image = image &#123;</div><div class="line">            let shadowImage = self.shadowImageWithImage(image: image)</div><div class="line">            return shadowImage</div><div class="line">        &#125;</div><div class="line">        return image</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/GaoRuihao/MarkdownPhotos/master/WX20170122-113208.png" alt="图例"></p>
+<p>这里需要注意，需要先剪切出需要的Image，然后在对image进行添加边框和阴影效果的操作，这里不能直接在一个<code>CGContext</code>里进行多层渲染<br>添加阴影代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">func shadowImageWithImage(image: UIImage) -&gt; UIImage? &#123;</div><div class="line">        let colorSpace = CGColorSpaceCreateDeviceRGB()</div><div class="line">        if let CGImage = image.cgImage &#123;</div><div class="line">            let shadowContext = CGContext(data:nil, width:Int(image.size.width + 10), height: Int(image.size.height + 10), bitsPerComponent: CGImage.bitsPerComponent, bytesPerRow: 0, space: colorSpace, bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue)</div><div class="line">            </div><div class="line">            </div><div class="line">            shadowContext?.setShadow(offset: CGSize(width: 0, height: 0), blur: 5, color: UIColor.darkGray.cgColor)</div><div class="line">            shadowContext?.draw(CGImage, in: CGRect(x:0, y: 10, width: image.size.width, height: image.size.height))</div><div class="line">            </div><div class="line">            if let shadowCGImage = shadowContext?.makeImage() &#123;</div><div class="line">                let shadowImage = UIImage(cgImage: shadowCGImage)</div><div class="line">                return shadowImage</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return nil</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/GaoRuihao/MarkdownPhotos/master/WX20170122-115332.png" alt="图例"></p>
+<p>生成了剪切图片后需要在对应位置画上阴影，生成图片被扣出的效果，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">func drawShadowImage(rect: CGRect) -&gt; UIImage? &#123;</div><div class="line">        if let imageRef = self.cgImage &#123;</div><div class="line">            let x = rect.origin.x + 10</div><div class="line">            let y = rect.origin.y + 25</div><div class="line">            </div><div class="line">            let dataSize = imageRef.width * imageRef.height * 64</div><div class="line">            let data = UnsafeMutablePointer&lt;UInt8&gt;.allocate(capacity: Int(dataSize))</div><div class="line">            let shadowContext = CGContext(data:data, width:Int(imageRef.width), height: Int(imageRef.height), bitsPerComponent: imageRef.bitsPerComponent, bytesPerRow: imageRef.width * 64, space: imageRef.colorSpace!, bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue)</div><div class="line">            shadowContext?.clear(CGRect(x: 0, y: 0, width: imageRef.width, height: imageRef.height))</div><div class="line">            shadowContext?.draw(imageRef, in: CGRect(x: 0, y: 0, width: imageRef.width, height: imageRef.height))</div><div class="line">            shadowContext?.translateBy(x: 0, y: CGFloat(imageRef.height))</div><div class="line">            shadowContext?.scaleBy(x: 1, y: -1)</div><div class="line">            </div><div class="line">            </div><div class="line">            shadowContext?.move(to: CGPoint(x: x, y: y))</div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x, y: y + 20))</div><div class="line">            shadowContext?.addArc(center: CGPoint(x: x, y: y + 30), radius: 10, startAngle: CGFloat(M_PI_2), endAngle: CGFloat(-M_PI_2), clockwise: false);</div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x, y: y + 60))</div><div class="line">            </div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x + 30, y: y + 60))</div><div class="line">            shadowContext?.addArc(center: CGPoint(x: x + 40, y: y + 60), radius: 10, startAngle: CGFloat(M_PI), endAngle: CGFloat(0), clockwise: true)</div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x + 80, y: y + 60))</div><div class="line">            </div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x + 80, y: y + 40))</div><div class="line">            shadowContext?.addArc(center: CGPoint(x: x + 80, y: y + 30), radius: 10, startAngle: CGFloat(-M_PI_2), endAngle: CGFloat(M_PI_2), clockwise: false)</div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x + 80, y: y))</div><div class="line">            </div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x + 50, y: y))</div><div class="line">            shadowContext?.addArc(center: CGPoint(x: x + 40, y: y), radius: 10, startAngle: CGFloat(0), endAngle: CGFloat(M_PI), clockwise: false)</div><div class="line">            shadowContext?.addLine(to: CGPoint(x: x, y: y))</div><div class="line">            </div><div class="line">            shadowContext?.setFillColor(gray: 122 / 255.0, alpha: 0.7)</div><div class="line">            shadowContext?.drawPath(using: .fill)</div><div class="line">            </div><div class="line">            if let cgImage = shadowContext?.makeImage() &#123;</div><div class="line">                let shadowImage = UIImage(cgImage: cgImage)</div><div class="line">                return shadowImage</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">        &#125;</div><div class="line">        return nil</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/GaoRuihao/MarkdownPhotos/master/WX20170122-115636.png" alt="demo"></p>
 
   </div>
   <footer class="article-footer">
